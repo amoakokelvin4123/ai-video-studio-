@@ -1,0 +1,21 @@
+{
+  "name": "ai-video-studio-render",
+  "version": "2.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@runwayml/sdk": "latest",
+    "bcryptjs": "latest",
+    "connect-pg-simple": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "multer": "latest",
+    "pg": "latest"
+  }
+}
