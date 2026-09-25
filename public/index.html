@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <title>NovaVideo — AI Video Studio</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <div id="authView" class="auth-view">
+    <div class="auth-brand">
+      <span class="logo-mark">✦</span>
+      <span>NovaVideo</span>
+    </div>
+    <div class="auth-card">
+      <div class="eyebrow">AI VIDEO STUDIO</div>
+      <h1 id="authTitle">Create cinematic videos from an idea.</h1>
+      <p id="authSub">Generate with text, animate an image, and keep every creation in your personal studio.</p>
+
+      <form id="authForm">
+        <div id="nameField" class="field hidden">
+          <label>Name</label>
+          <input id="name" autocomplete="name" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" required>
+        </div>
+        <button class="primary" type="submit" id="authButton">Create account</button>
+      </form>
+      <p id="authError" class="form-error"></p>
+      <button id="authSwitch" class="text-button">Already have an account? Log in</button>
+      <div class="demo-note">Starter credits are added automatically to new accounts.</div>
+    </div>
+  </div>
+
+  <div id="appView" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="logo-mark">✦</span><span>NovaVideo</span></div>
+      <nav>
+        <button class="nav-item active" data-view="studio"><span>✦</span> Studio</button>
+        <button class="nav-item" data-view="history"><span>▣</span> My videos</button>
+      </nav>
+      <div class="side-bottom">
+        <div class="credit-box">
+          <div class="small-label">AVAILABLE CREDITS</div>
+          <div class="credit-number" id="sideCredits">0</div>
+          <div class="credit-hint">Gen-4.5 · 12 credits/sec</div>
+        </div>
+        <button id="logout" class="logout">Log out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="mobileMenu" class="icon-button">☰</button>
+        <div>
+          <div class="top-title" id="viewTitle">Studio</div>
+          <div class="top-sub" id="viewSub">Create your next scene.</div>
+        </div>
+        <div class="profile">
+          <div class="avatar" id="avatar">N</div>
+          <div class="profile-copy">
+            <strong id="profileName">User</strong>
+            <span id="profileEmail">email</span>
+          </div>
+        </div>
+      </header>
+
+      <section id="studioView" class="view">
+        <div class="welcome">
+          <div>
+            <div class="eyebrow">CREATE</div>
+            <h2>What do you want to see?</h2>
+            <p>Describe a scene, or upload an image and bring it to life.</p>
+          </div>
+          <div class="mini-credit"><span id="miniCredits">0</span> credits</div>
+        </div>
+
+        <div class="generator-grid">
+          <section class="panel generator-panel">
+            <div class="mode-tabs">
+              <button class="mode active" data-mode="text">Text to video</button>
+              <button class="mode" data-mode="image">Image to video</button>
+            </div>
+
+            <form id="generateForm">
+              <div class="field">
+                <div class="label-row"><label for="prompt">Prompt</label><span id="count">0 / 2000</span></div>
+                <textarea id="prompt" maxlength="2000" placeholder="A cinematic drone shot above a busy Accra street at golden hour, warm sunlight, realistic motion, slow camera movement..."></textarea>
+              </div>
+
+              <div id="uploadArea" class="upload-area hidden">
+                <input type="file" id="image" accept="image/png,image/jpeg,image/webp">
+                <div class="upload-icon">↥</div>
+                <strong>Drop an image here or tap to browse</strong>
+                <span>PNG, JPG or WEBP · up to 8 MB</span>
+                <img id="imagePreview" class="image-preview hidden" alt="Selected image">
+              </div>
+
+              <div class="options">
+                <div class="field">
+                  <label for="duration">Duration</label>
+                  <select id="duration">
+                    <option value="5">5 seconds · 60 credits</option>
+                    <option value="10">10 seconds · 120 credits</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="ratio">Format</label>
+                  <select id="ratio">
+                    <option value="1280:720">Landscape · 16:9</option>
+                    <option value="720:1280">Portrait · 9:16</option>
+                    <option value="960:960">Square · 1:1</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="cost-row">
+                <span>Estimated app credit cost</span>
+                <strong id="cost">60 credits</strong>
+              </div>
+
+              <button class="primary generate" type="submit" id="generateButton">
+                <span>Generate video</span><span>→</span>
+              </button>
+            </form>
+
+            <div id="generateError" class="form-error"></div>
+          </section>
+
+          <section class="panel preview-panel">
+            <div class="panel-heading">
+              <div><strong>Preview</strong><span id="previewStatus">Ready to create</span></div>
+              <span class="status-dot ready" id="statusDot"></span>
+            </div>
+            <div class="preview-stage" id="previewStage">
+              <div class="preview-empty">
+                <div class="play-orb">▶</div>
+                <strong>Your generated video will appear here.</strong>
+                <span>Generation usually takes a little while.</span>
+              </div>
+              <div id="progressBox" class="progress-box hidden">
+                <div class="spinner"></div>
+                <strong id="progressTitle">Generating...</strong>
+                <span id="progressText">Sending your idea to the video model.</span>
+              </div>
+              <video id="video" controls playsinline class="hidden"></video>
+            </div>
+            <div class="result-actions hidden" id="resultActions">
+              <a id="openVideo" class="secondary" target="_blank" rel="noopener">Open video</a>
+              <button id="newVideo" class="primary small">Create another</button>
+            </div>
+          </section>
+        </div>
+
+        <section class="stats-grid">
+          <div class="stat"><span>All generations</span><strong id="statTotal">0</strong></div>
+          <div class="stat"><span>Completed</span><strong id="statCompleted">0</strong></div>
+          <div class="stat"><span>Processing</span><strong id="statProcessing">0</strong></div>
+          <div class="stat"><span>Credits used</span><strong id="statUsed">0</strong></div>
+        </section>
+      </section>
+
+      <section id="historyView" class="view hidden">
+        <div class="welcome">
+          <div>
+            <div class="eyebrow">LIBRARY</div>
+            <h2>My videos</h2>
+            <p>Your latest generations, all in one place.</p>
+          </div>
+        </div>
+        <div id="historyGrid" class="history-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
